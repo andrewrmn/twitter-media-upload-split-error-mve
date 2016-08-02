@@ -1,0 +1,20 @@
+{
+  "name": "twitter-media-upload-split-error-mve",
+  "version": "1.0.0",
+  "description": "Minimum-Viable-Example to demonstrate media upload errors when splitting base64 strings in oauth.io/Twitter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jambonsw/twitter-media-upload-split-error-mve.git"
+  },
+  "author": "JamBon Software",
+  "license": "BSD-2-Clause",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/jambonsw/twitter-media-upload-split-error-mve/issues"
+  },
+  "homepage": "https://github.com/jambonsw/twitter-media-upload-split-error-mve#readme"
+}
