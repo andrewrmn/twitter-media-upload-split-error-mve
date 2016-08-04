@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Twitter Upload Media Error MVE</title>
+      <meta name="date" content="2016-09-01">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="description" content="Minimum-Viable-Example to demonstrate media upload errors when uploading images to Twitter in base64 strings chunks via OAuth.io.">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/skeleton/2.0.4/css/skeleton.css" integrity="sha256-ECB9bbROLGm8wOoEbHcHRxlHgzGqYpDtNTgDTyDz0wg=" crossorigin="anonymous">
+      <style>
+        img {
+          display: block;
+          margin: 10px auto;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="row">
+          <div class="offset-by-one ten columns">
+            <h1>Uploading Images to Twitter</h1>
+            <p>
+              Published on <time datetime="2016-08-31">August 31st, 2016</time>
+              <br />
+              Updated on <time datetime="2016-09-01">September 1st, 2016</time>
+            </p>
+            <h2>Problem Description</h2>
+            <p>We are unable to reliably upload images to Twitter.</p>
+            <p>Twitter has a REST API endpoint for <a href="https://dev.twitter.com/rest/media/uploading-media">uploading chunked images</a>. We are using <a href="https://oauth.io">OAuth.io</a> (<a href="http://docs.oauth.io/">documentation here</a>) to interact with Twitter. We are uploading the image as a base64 string.</p>
+            <p>If we upload an image in a single chunk, then the image uploads to Twitter without any problem. However, if we split the same image into multiple chunks, then Twitter <em>may</em>:</p>
+            <ol>
+              <li>refuse to upload the image, informing us that the <code>Segments do not add up to provided total file size</code> once the <a href="https://dev.twitter.com/rest/reference/post/media/upload-finalize"><code>FINALIZE</code></a> command is called;</li>
+              <li>accept the the image, but display a corrupted image in the tweet.</li>
+            </ol>
+            <p>The error behavior varies based on the individual file used and the chunk size of our upload. However, we have not been able to determine any viable rules to guarantee success, and certain files seem to be more error prone than others.</p>
+            <p>Without the ability to introspect what OAuth.io is POSTing or what Twitter is receiving, we are unable to determine where the problem may be occurring.</p>
+            <h2>Minimum Viable Example (MVE) Explanation</h2>
+            <p><strong>NB: no messages are displayed on this site. Please use your browser's developer tools to see messages sent to the console, as well as the network tab to see calls made to OAuth.io.</strong></p>
+            <p><em>All buttons/behavior descibed here found at bottom of page.</em></p>
+            <p>This site loads two images as base64 strings.</p>
+            <p>The image of the warrior (originally found <a href="http://jsfiddle.net/PAEz/XfDUS/">here</a> without license, and used without permission) demonstrates the first error behavior, and will be rejected by Twitter.</p>
+            <p>The image of the duck (found on Wikipedia with a CC License) demonstrates the second error, and will successfully upload but will be corrupted in the process.</p>
+            <p>The warrior image is uploaded as a 5332 character base64-string, split into two equal 2666 character base64-string chunks when demonstrating the error. The duck is uploaded as a 12100 character base64-string, split into two 6050 character base64-string chunks when demonstrating the error.</p>
+            <p>This site presents the user with seven buttons (bottom of the page).</p>
+            <p>The first button will prompt you to log into Twitter (using your own account) and subsequently authenticate the example site with Twitter, allowing the site to upload images to your account.</p>
+            <p>There are three buttons for each of the images described above.</p>
+            <p>The first button in the image set will successfully upload the image in a single API call to Twitter, demonstrating that we have the correct image size, and that the string we are using can be converted from base64 by Twitter.</p>
+            <p>The second button in the image set will upload the image in chunks, using the chunk length detailed above, demonstrating the issues described at the top of the page.</p>
+            <p>The third button also uploads in chunks, but selects a different chunk length (2000 for the warrior, 6000 for the duck), causing the errors to be avoided.</p>
+          </div> <!-- end of column -->
+        </div> <!-- end of row -->
+        <div class="row">
+          <div class="offset-by-one ten columns">
+            <h2>Behavior</h2>
+            <p><strong>Logging into Twitter and clicking these buttons will upload and tweet the images!</strong></p>
+            <p><a href="https://github.com/jambonsw/twitter-media-upload-split-error-mve">See the code on Github</a></p>
+          </div> <!-- end of column -->
+        </div> <!-- end of row -->
+        <div class="row">
+          <div class="offset-by-two eight columns">
+              <button class="button-primary u-full-width" onclick="twitterLogin()">
+                Login to Twitter
+              </button>
+          </div> <!-- end of column -->
+        </div> <!-- end of row -->
+        <div class="row">
+          <div class="offset-by-one five columns">
+            <img src="icon.jpg" alt="Warrior" />
+            <button class="u-full-width" onclick="warriorSingleUpload()">
+              Simple Upload
+            </button>
+            <button class="u-full-width" onclick="warriorChunckedUploadError()">
+              Chunked Upload (Fails)
+            </button>
+            <button class="u-full-width" onclick="warriorChunckedUploadSuccess()">
+              Chunked Upload (Succeeds)
+            </button>
+          </div> <!-- end of column -->
+          <div class="five columns">
+            <img src="YellowDuck.jpg" alt="Rubber Yellow Duck" />
+            <button class="u-full-width" onclick="yellowDuckSingleUpload()">
+              Simple Upload
+            </button>
+            <button class="u-full-width" onclick="yellowDuckChunckedUploadError()">
+              Chunked Upload (Fails)
+            </button>
+            <button class="u-full-width" onclick="yellowDuckChunckedUploadSuccess()">
+              Chunked Upload (Succeeds)
+            </button>
+          </div> <!-- end of column -->
+        </div> <!-- end of row -->
+      </div> <!-- end of container -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/oauth-io/0.5.2/oauth.js"></script>
+      <script type="text/javascript" src="warriorBase64Image.js"></script>
+      <script type="text/javascript" src="yellowDuckBase64Image.js"></script>
+      <script type="text/javascript" src="main.js"></script>
+    </body>
+  </html>
