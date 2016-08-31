@@ -4,6 +4,7 @@
 
 var tweet;
 var twitterLogin;
+var twitterSimpleUpload;
 
 twitterLogin = function () {
   var oAuthRequest;
@@ -34,6 +35,56 @@ tweet = function (oAuthRequest, status, mediaIdString) {
     console.log(postResponse);
   }).fail(function (err) {
     console.log('Twitter could not create tweet');
+    console.log(err);
+  });
+};
+
+twitterSimpleUpload = function (base64ImageString, fileSize) {
+  var oAuthRequest = twitterLogin();
+  var mediaIdString;
+  oAuthRequest.post(
+    'https://upload.twitter.com/1.1/media/upload.json',
+    { data: {
+      command: 'INIT',
+      media_type: 'image/jpeg',
+      total_bytes: fileSize
+    } }
+  ).done(function (twitterResponse) {
+    // INIT successfully sent
+    // upload the one and only chunk to twitter
+    mediaIdString = twitterResponse.media_id_string;
+    oAuthRequest.post(
+      'https://upload.twitter.com/1.1/media/upload.json',
+      {
+        headers: { 'Content-Transfer-Encoding': 'base64' },
+        data: {
+          command: 'APPEND',
+          media_data: base64ImageString,
+          media_id: mediaIdString,
+          segment_index: 0
+        }
+      }
+    ).done(function () {
+      // APPEND successful
+      oAuthRequest.post(
+        'https://upload.twitter.com/1.1/media/upload.json',
+        { data: {
+          command: 'FINALIZE',
+          media_id: mediaIdString
+        } }
+      ).done(function () {
+        // FINALIZE successful
+        tweet(oAuthRequest, 'Single Append!', mediaIdString);
+      }).fail(function (err) {
+        console.log('FINALIZE Failed');
+        console.log(err);
+      });
+    }).fail(function (err) {
+      console.log('APPEND Failed');
+      console.log(err);
+    });
+  }).fail(function (err) {
+    console.log('INIT Failed');
     console.log(err);
   });
 };
