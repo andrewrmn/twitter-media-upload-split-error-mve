@@ -1,4 +1,4 @@
-/* globals OAuth warriorBase64String */
+/* globals OAuth warriorBase64String yellowDuckBase64String */
 /* eslint func-names: "off" */
 /* eslint no-console: "off" */
 
@@ -8,10 +8,15 @@ var twitterLogin;
 var twitterSimpleUpload;
 // Image Sizes
 var warriorFileSize = 3999;
+var yellowDuckFileSize = 9073;
 // Warrior Functions
 var warriorChunckedUploadError; // eslint-disable-line no-unused-vars
 var warriorChunckedUploadSuccess; // eslint-disable-line no-unused-vars
 var warriorSingleUpload; // eslint-disable-line no-unused-vars
+// Yellow Duck Functions
+var yellowDuckChunckedUploadError; // eslint-disable-line no-unused-vars
+var yellowDuckChunckedUploadSuccess; // eslint-disable-line no-unused-vars
+var yellowDuckSingleUpload; // eslint-disable-line no-unused-vars
 
 twitterLogin = function () {
   var oAuthRequest;
@@ -180,4 +185,16 @@ warriorChunckedUploadError = function () {
 
 warriorChunckedUploadSuccess = function () {
   twitterChunkedUpload(warriorBase64String, warriorFileSize, 2000);
+};
+
+yellowDuckSingleUpload = function () {
+  twitterSimpleUpload(yellowDuckBase64String, yellowDuckFileSize);
+};
+
+yellowDuckChunckedUploadError = function () {
+  twitterChunkedUpload(yellowDuckBase64String, yellowDuckFileSize, 6050);
+};
+
+yellowDuckChunckedUploadSuccess = function () {
+  twitterChunkedUpload(yellowDuckBase64String, yellowDuckFileSize, 6000);
 };
