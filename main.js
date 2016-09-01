@@ -1,4 +1,4 @@
-/* globals OAuth */
+/* globals OAuth warriorBase64String */
 /* eslint func-names: "off" */
 /* eslint no-console: "off" */
 
@@ -6,6 +6,12 @@ var tweet;
 var twitterChunkedUpload;
 var twitterLogin;
 var twitterSimpleUpload;
+// Image Sizes
+var warriorFileSize = 3999;
+// Warrior Functions
+var warriorChunckedUploadError; // eslint-disable-line no-unused-vars
+var warriorChunckedUploadSuccess; // eslint-disable-line no-unused-vars
+var warriorSingleUpload; // eslint-disable-line no-unused-vars
 
 twitterLogin = function () {
   var oAuthRequest;
@@ -162,4 +168,16 @@ twitterChunkedUpload = function (base64ImageString, fileSize, chunkSize) {
     console.log('INIT Failed');
     console.log(err);
   });
+};
+
+warriorSingleUpload = function () {
+  twitterSimpleUpload(warriorBase64String, warriorFileSize);
+};
+
+warriorChunckedUploadError = function () {
+  twitterChunkedUpload(warriorBase64String, warriorFileSize, 2666);
+};
+
+warriorChunckedUploadSuccess = function () {
+  twitterChunkedUpload(warriorBase64String, warriorFileSize, 2000);
 };
