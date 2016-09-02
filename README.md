@@ -1,5 +1,10 @@
 # Read Me
 
+Issues opened on:
+
+- [Stack Overflow](http://stackoverflow.com/questions/39293763/errors-uploading-chunked-images-to-twitter-via-oauth-io)
+- [Twitter Community](https://twittercommunity.com/t/errors-uploading-chunked-images-to-twitter-via-oauth-io/73357)
+
 ## Problem Description
 
 We are unable to reliably upload images to Twitter.
